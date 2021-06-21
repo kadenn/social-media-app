@@ -1,0 +1,44 @@
+version: '2'
+
+services:
+  client:
+    build: ./client
+    container_name: client
+    command: npm start
+    ports:
+      - '3000:3000'
+
+  comments:
+    build: ./comments
+    container_name: comments
+    command: npm start
+    ports:
+      - '4001:4001'
+
+  event-bus:
+    build: ./event-bus
+    container_name: event-bus
+    command: npm start
+    ports:
+      - '4005:4005'
+
+  moderation:
+    build: ./moderation
+    container_name: moderation
+    command: npm start
+    ports:
+      - '4003:4003'
+
+  posts:
+    build: ./posts
+    container_name: posts
+    command: npm start
+    ports:
+      - '4000:4000'
+
+  query:
+    build: ./query
+    container_name: query
+    command: npm start
+    ports:
+      - '4002:4002'
