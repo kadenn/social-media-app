@@ -1,4 +1,4 @@
-version: '2'
+version: '3'
 
 services:
   client:
@@ -6,39 +6,55 @@ services:
     container_name: client
     command: npm start
     ports:
-      - '3000:3000'
+      - 3000:3000
+    depends_on:
+      - 'event-bus'
+      - 'comments'
+      - 'moderation'
+      - 'posts'
+      - 'query'
 
   comments:
     build: ./comments
     container_name: comments
     command: npm start
     ports:
-      - '4001:4001'
+      - 4001:4001
+    depends_on:
+      - 'event-bus'
 
   event-bus:
     build: ./event-bus
     container_name: event-bus
     command: npm start
     ports:
-      - '4005:4005'
+      - 4005:4005
 
   moderation:
     build: ./moderation
     container_name: moderation
     command: npm start
     ports:
-      - '4003:4003'
+      - 4003:4003
+    depends_on:
+      - 'event-bus'
 
   posts:
     build: ./posts
     container_name: posts
     command: npm start
     ports:
-      - '4000:4000'
+      - 4000:4000
+    depends_on:
+      - 'event-bus'
 
   query:
     build: ./query
     container_name: query
     command: npm start
     ports:
-      - '4002:4002'
+      - 4002:4002
+    depends_on:
+      - 'event-bus'
+      - 'posts'
+      - 'comments'

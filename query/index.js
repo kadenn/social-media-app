@@ -27,7 +27,7 @@ const handleEvent = (type, data) => {
     const { id, content, postId, status } = data;
 
     const post = posts[postId];
-    const comment = post.comments.find(comment => {
+    const comment = post.comments.find((comment) => {
       return comment.id === id;
     });
 
@@ -36,29 +36,30 @@ const handleEvent = (type, data) => {
   }
 };
 
-app.get('/posts', (req, res) => {
-  res.send(posts);
-});
+try {
+  app.get('/posts', (req, res) => {
+    res.send(posts);
+  });
 
-app.post('/events', (req, res) => {
-  const { type, data } = req.body;
+  app.post('/events', (req, res) => {
+    const { type, data } = req.body;
 
-  handleEvent(type, data);
+    handleEvent(type, data);
 
-  res.send({});
-});
+    res.send({});
+  });
 
-app.listen(4002, async () => {
-  console.log('Listening on 4002');
+  app.listen(4002, async () => {
+    console.log('Listening on 4002');
 
-  const res = await axios.get('http://event-bus:4005/events').catch((err)=>{console.error("kagan err:", err)});
+    const res = await axios.get('http://event-bus:4005/events');
+    let data = await res.data;
 
-  const res = await axios.get('http://localhost:4005/events').catch((err)=>{console.error("anday err:", err)});
-
-
-  for (let event of res.data) {
-    console.log('Processing event:', event.type);
-
-    handleEvent(event.type, event.data);
-  }
-});
+    for (let event of data) {
+      console.log('Processing event:', event.type);
+      handleEvent(event.type, event.data);
+    }
+  });
+} catch (err) {
+  console.log('message', err);
+}
