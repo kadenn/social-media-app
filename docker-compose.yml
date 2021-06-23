@@ -1,18 +1,6 @@
 version: '3'
 
 services:
-  client:
-    build: ./client
-    container_name: client
-    command: npm start
-    ports:
-      - 3000:3000
-    depends_on:
-      - 'event-bus'
-      - 'comments'
-      - 'moderation'
-      - 'posts'
-      - 'query'
 
   comments:
     build: ./comments
@@ -29,6 +17,8 @@ services:
     command: npm start
     ports:
       - 4005:4005
+    depends_on:
+      - 'mongodb'
 
   moderation:
     build: ./moderation
@@ -56,5 +46,39 @@ services:
       - 4002:4002
     depends_on:
       - 'event-bus'
-      - 'posts'
-      - 'comments'
+
+  db-client:
+    build: ./db-client
+    container_name: db-client
+    command: npm start
+    ports:
+      - 3001:3001
+    depends_on:
+      - 'mongodb'
+
+  mongodb:
+    image: mongo
+    container_name: mongodb
+    ports:
+      - 27017:27017
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=password
+    volumes:
+      - mongo-data:/data/db
+
+  mongo-express:
+    image: mongo-express
+    container_name: mongo-express
+    ports:
+      - 8080:8081
+    environment:
+      - ME_CONFIG_MONGODB_ADMINUSERNAME=admin
+      - ME_CONFIG_MONGODB_ADMINPASSWORD=password
+      - ME_CONFIG_MONGODB_SERVER=mongodb
+    depends_on:
+      - 'mongodb'
+
+volumes:
+  mongo-data:
+    driver: local
