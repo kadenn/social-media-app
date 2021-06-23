@@ -1,7 +1,6 @@
 version: '3'
 
 services:
-
   comments:
     build: ./comments
     container_name: comments
@@ -47,9 +46,9 @@ services:
     depends_on:
       - 'event-bus'
 
-  db-client:
-    build: ./db-client
-    container_name: db-client
+  users:
+    build: ./users
+    container_name: users
     command: npm start
     ports:
       - 3001:3001
