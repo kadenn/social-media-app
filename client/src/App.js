@@ -16,29 +16,36 @@ import { config } from './config';
 
 export default () => {
   return (
-    <div className="container">
-      <nav class="navbar navbar-default">
-        <div class="container-fluid">
-          <ul class="nav navbar-nav navbar-right">
-            <FirebaseAuthProvider {...config} firebase={firebase}>
+    <FirebaseAuthProvider {...config} firebase={firebase}>
+      <div className="container">
+        <nav class="navbar navbar-default">
+          <div class="container-fluid">
+            <ul class="nav navbar-nav navbar-right">
               <IfFirebaseAuthed>
                 {() => {
+                  var user = firebase.auth().currentUser;
+                  if (user != null) {
+                    console.log(user.email);
+                    console.log(user.uid);
+                  }
                   return (
-                    <button
-                      id="login"
-                      class="btn"
-                      onClick={() => {
-                        firebase.auth().signOut();
-                      }}
-                      style={{
-                        position: 'absolute',
-                        right: '0px',
-                        fontSize: '30px',
-                        top: '5px',
-                      }}
-                    >
-                      Sign Out
-                    </button>
+                    <div>
+                      <button
+                        id="login"
+                        class="btn"
+                        onClick={() => {
+                          firebase.auth().signOut();
+                        }}
+                        style={{
+                          position: 'absolute',
+                          right: '0px',
+                          fontSize: '25px',
+                          top: '5px',
+                        }}
+                      >
+                        {user.email} - Sign Out
+                      </button>
+                    </div>
                   );
                 }}
               </IfFirebaseAuthed>
@@ -87,16 +94,16 @@ export default () => {
                   );
                 }}
               </IfFirebaseUnAuthed>
-            </FirebaseAuthProvider>
-          </ul>
-        </div>
-      </nav>
+            </ul>
+          </div>
+        </nav>
 
-      <h1>Create Post</h1>
-      <PostCreate />
-      <hr />
-      <h1>Posts</h1>
-      <PostList />
-    </div>
+        <h1>Create Post</h1>
+        <PostCreate />
+        <hr />
+        <h1>Posts</h1>
+        <PostList />
+      </div>
+    </FirebaseAuthProvider>
   );
 };
