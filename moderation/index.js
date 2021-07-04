@@ -5,7 +5,6 @@ const axios = require('axios');
 const app = express();
 app.use(bodyParser.json());
 
-try {
   app.post('/events', async (req, res) => {
     const { type, data } = req.body;
 
@@ -29,6 +28,3 @@ try {
   app.listen(4003, () => {
     console.log('Listening on 4003');
   });
-} catch (err) {
-  console.log('message', err);
-}

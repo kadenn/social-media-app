@@ -36,30 +36,26 @@ const handleEvent = (type, data) => {
   }
 };
 
-try {
-  app.get('/posts', (req, res) => {
-    res.send(posts);
-  });
+app.get('/posts', (req, res) => {
+  res.send(posts);
+});
 
-  app.post('/events', (req, res) => {
-    const { type, data } = req.body;
+app.post('/events', (req, res) => {
+  const { type, data } = req.body;
 
-    handleEvent(type, data);
+  handleEvent(type, data);
 
-    res.send({});
-  });
+  res.send({});
+});
 
-  app.listen(4002, async () => {
-    console.log('Listening on 4002');
+app.listen(4002, async () => {
+  console.log('Listening on 4002');
 
-    const res = await axios.get('http://event-bus:4005/events');
-    let data = await res.data;
+  const res = await axios.get('http://event-bus:4005/events');
+  let data = await res.data;
 
-    for (let event of data) {
-      console.log('Processing event:', event.type);
-      handleEvent(event.type, event.data);
-    }
-  });
-} catch (err) {
-  console.log('message', err);
-}
+  for (let event of data) {
+    console.log('Processing event:', event.type);
+    handleEvent(event.type, event.data);
+  }
+});
