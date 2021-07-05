@@ -1,3 +1,10 @@
+const firebase = require('firebase/app');
+require('firebase/database');
+const config = require('./config');
+
+firebase.initializeApp(config);
+const database = firebase.database();
+
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
@@ -7,37 +14,44 @@ const app = express();
 app.use(bodyParser.json());
 app.use(cors());
 
-const posts = {};
-
 const handleEvent = (type, data) => {
   if (type === 'PostCreated') {
-    const { id, title } = data;
-
-    posts[id] = { id, title, comments: [] };
-  }
-
-  if (type === 'CommentCreated') {
-    const { id, content, postId, status } = data;
-
-    const post = posts[postId];
-    post.comments.push({ id, content, status });
-  }
-
-  if (type === 'CommentUpdated') {
-    const { id, content, postId, status } = data;
-
-    const post = posts[postId];
-    const comment = post.comments.find((comment) => {
-      return comment.id === id;
+    const { id, title, user } = data;
+    let postRef = database.ref('posts');
+    postRef.child(id).set({
+      id: id,
+      user: user,
+      title: title,
+      date: new Date().toLocaleString(),
     });
+  }
 
-    comment.status = status;
-    comment.content = content;
+  if (type === 'CommentApproved') {
+    const { id, content, postId, status, user } = data;
+    let commentRef = database.ref('posts/' + postId + '/comments');
+    commentRef.child(id).set({
+      id: id,
+      user: user,
+      content: content,
+      status: status,
+    });
   }
 };
 
 app.get('/posts', (req, res) => {
-  res.send(posts);
+  let postRef = database.ref('posts');
+  postRef.once(
+    'value',
+    (snapshot) => {
+      let posts = snapshot.val();
+      console.log('posts:', posts);
+      res.send(posts);
+    },
+    (errorObject) => {
+      console.log('The read failed: ' + errorObject.name);
+      res.send('The read failed');
+    }
+  );
 });
 
 app.post('/events', (req, res) => {

@@ -16,11 +16,12 @@ app.get('/posts', (req, res) => {
 
 app.post('/posts', async (req, res) => {
   const id = randomBytes(4).toString('hex');
-  const { title } = req.body;
+  const { user, title } = req.body;
 
   posts[id] = {
     id,
     title,
+    user
   };
 
   await axios.post('http://event-bus:4005/events', {
@@ -28,6 +29,7 @@ app.post('/posts', async (req, res) => {
     data: {
       id,
       title,
+      user
     },
   });
 
