@@ -12,3 +12,5 @@ Event driven microservices example.
 
 1. Go inside client folder
 2. Run app with "npm start"
+
+## Thanks for browsing our project.
