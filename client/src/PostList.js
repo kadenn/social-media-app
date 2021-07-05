@@ -3,7 +3,7 @@ import axios from 'axios';
 import CommentCreate from './CommentCreate';
 import CommentList from './CommentList';
 
-export default () => {
+export default ({ user }) => {
   const [posts, setPosts] = useState({});
 
   const fetchPosts = async () => {
@@ -25,8 +25,9 @@ export default () => {
       >
         <div className="card-body">
           <h3>{post.title}</h3>
+          <p style={{color: "rgba(0,0,0,0.5)"}}>Created By: {post.user.email.split('@')[0]}</p>
           <CommentList comments={post.comments} />
-          <CommentCreate postId={post.id} />
+          {user.uid ? <CommentCreate postId={post.id} user={user} /> : null}
         </div>
       </div>
     );

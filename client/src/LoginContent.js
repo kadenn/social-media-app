@@ -9,13 +9,13 @@ export default () => {
   const [password, setPassword] = useState('');
 
   return (
-    <div class="modal-content">
-      <div class="modal-body">
-        <div class="form-group">
-          <label class="control-label">Email</label>
+    <div className="modal-content">
+      <div className="modal-body">
+        <div className="form-group">
+          <label className="control-label">Email</label>
           <input
             type="email"
-            class="form-control"
+            className="form-control"
             id="inputEmail"
             placeholder="Email"
             value={email}
@@ -23,11 +23,11 @@ export default () => {
           />
         </div>
 
-        <div class="form-group">
-          <label class="control-label">Password</label>
+        <div className="form-group">
+          <label className="control-label">Password</label>
           <input
             type="password"
-            class="form-control"
+            className="form-control"
             id="inputPassword"
             placeholder="Password"
             value={password}
@@ -45,10 +45,8 @@ export default () => {
                   .signInWithEmailAndPassword(email, password)
                   .catch(function (error) {
                     // Handle Errors here.
-                    var errorCode = error.code;
                     var errorMessage = error.message;
-                    console.log(errorCode);
-                    console.log(errorMessage);
+                    alert(errorMessage);
                   });
               }}
             >

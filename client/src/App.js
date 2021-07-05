@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PostCreate from './PostCreate';
 import PostList from './PostList';
 import LoginContent from './LoginContent';
@@ -15,26 +15,28 @@ import {
 import { config } from './config';
 
 export default () => {
+  const [user, setUser] = useState({});
+
   return (
     <FirebaseAuthProvider {...config} firebase={firebase}>
       <div className="container">
-        <nav class="navbar navbar-default">
-          <div class="container-fluid">
-            <ul class="nav navbar-nav navbar-right">
+        <nav className="navbar navbar-default">
+          <div className="container-fluid">
+            <ul className="nav navbar-nav navbar-right">
               <IfFirebaseAuthed>
                 {() => {
-                  var user = firebase.auth().currentUser;
-                  if (user != null) {
-                    console.log(user.email);
-                    console.log(user.uid);
+                  var tempUser = firebase.auth().currentUser;
+                  if (tempUser != null) {
+                    setUser(tempUser);
                   }
                   return (
                     <div>
                       <button
                         id="login"
-                        class="btn"
+                        className="btn"
                         onClick={() => {
                           firebase.auth().signOut();
+                          window.location.reload();
                         }}
                         style={{
                           position: 'absolute',
@@ -57,7 +59,7 @@ export default () => {
                         trigger={
                           <button
                             id="login"
-                            class="btn"
+                            className="btn"
                             style={{
                               position: 'absolute',
                               right: '0px',
@@ -75,7 +77,7 @@ export default () => {
                         trigger={
                           <button
                             id="register"
-                            class="btn"
+                            className="btn"
                             style={{
                               position: 'absolute',
                               right: '100px',
@@ -97,12 +99,15 @@ export default () => {
             </ul>
           </div>
         </nav>
-
-        <h1>Create Post</h1>
-        <PostCreate />
-        <hr />
+        {user.uid ? (
+          <div>
+            <h1>Create Post</h1>
+            <PostCreate user={user} />
+            <hr />
+          </div>
+        ) : null}
         <h1>Posts</h1>
-        <PostList />
+        <PostList user={user} />
       </div>
     </FirebaseAuthProvider>
   );

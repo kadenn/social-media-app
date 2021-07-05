@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 
-export default () => {
+export default ({ user }) => {
   const [title, setTitle] = useState('');
 
   const onSubmit = async (event) => {
     event.preventDefault();
 
     await axios.post('http://0.0.0.0:4000/posts', {
+      user,
       title,
     });
 
