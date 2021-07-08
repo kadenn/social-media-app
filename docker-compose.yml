@@ -16,8 +16,6 @@ services:
     command: npm start
     ports:
       - 4005:4005
-    depends_on:
-      - 'event-bus'
 
   moderation:
     build: ./moderation
