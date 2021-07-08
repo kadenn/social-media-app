@@ -17,7 +17,7 @@ services:
     ports:
       - 4005:4005
     depends_on:
-      - 'mongodb'
+      - 'event-bus'
 
   moderation:
     build: ./moderation
